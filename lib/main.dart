@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:state_management/pages/product_details_page.dart';
 import 'package:state_management/pages/products_overview_page.dart';
-import 'package:state_management/providers/ProductsProvider.dart';
+import 'package:state_management/providers/products_provider.dart';
 
 void main() {
   runApp(MainApp());
@@ -24,9 +24,7 @@ class MainApp extends StatelessWidget {
             secondary: Colors.deepOrange,
           ),
         ),
-        routes: {
-          ProductDetails.routeName:(context) => ProductDetails()
-        },
+        routes: {ProductDetails.routeName: (context) => const ProductDetails()},
         home: const ProductsOverviewPage(),
       ),
     );
