@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:state_management/pages/product_details_page.dart';
+import 'package:state_management/providers/models/product.dart';
 
 class ProductItem extends StatelessWidget {
-  final String id;
-  final String title;
-  final String imageUrl;
   const ProductItem({
     super.key,
-    required this.id,
-    required this.title,
-    required this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
+    final themeContext = Theme.of(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
           footer: GridTileBar(
             backgroundColor: Colors.black87,
-            leading: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.favorite,
-                color: Theme.of(context).colorScheme.secondary,
+            leading: Consumer<Product>(
+              builder: (context, product, child) => IconButton(
+                onPressed: () {
+                  product.toggleFavorite();
+                },
+                icon: Icon(
+                  product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: themeContext.colorScheme.secondary,
+                ),
               ),
             ),
             title: Text(
-              title,
+              product.title,
               textAlign: TextAlign.center,
             ),
             trailing: IconButton(
@@ -41,10 +43,10 @@ class ProductItem extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .pushNamed(ProductDetails.routeName, arguments: id);
+                  .pushNamed(ProductDetails.routeName, arguments: product.id);
             },
             child: Image.network(
-              imageUrl,
+              product.imageUrl,
               fit: BoxFit.cover,
             ),
           )),

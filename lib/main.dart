@@ -24,7 +24,9 @@ class MainApp extends StatelessWidget {
             secondary: Colors.deepOrange,
           ),
         ),
-        routes: {ProductDetails.routeName: (context) => const ProductDetails()},
+        routes: {
+          ProductDetails.routeName: (context) => const ProductDetails(),
+        },
         home: const ProductsOverviewPage(),
       ),
     );
