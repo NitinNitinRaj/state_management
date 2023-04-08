@@ -35,7 +35,7 @@ class Cart with ChangeNotifier {
         (oldCartItem) => CartItem(
           id: oldCartItem.id,
           title: oldCartItem.title,
-          price: price * (oldCartItem.quantity + 1),
+          price: oldCartItem.price,
           quantity: oldCartItem.quantity + 1,
         ),
       );
@@ -51,6 +51,19 @@ class Cart with ChangeNotifier {
       );
     }
     print(_cartItems.values.toList());
+    notifyListeners();
+  }
+
+  double get getTotalPrice {
+    double total = 0;
+    _cartItems.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity;
+    });
+    return total;
+  }
+
+  void removeItemFromCart(String productId) {
+    _cartItems.remove(productId);
     notifyListeners();
   }
 }

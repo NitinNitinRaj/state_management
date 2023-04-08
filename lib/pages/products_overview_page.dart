@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:state_management/pages/cart_page.dart';
 import 'package:state_management/providers/models/cart.dart';
 import 'package:state_management/widgets/products_grid.dart';
 
@@ -34,7 +35,9 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             ),
             child: IconButton(
               icon: const Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartPage.routeName);
+              },
             ),
           ),
           buildFilterPopUpMenu(themeContext),
