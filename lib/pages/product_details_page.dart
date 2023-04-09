@@ -20,7 +20,7 @@ class ProductDetails extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 300,
               width: double.infinity,
               child: Image.network(

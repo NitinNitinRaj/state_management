@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:state_management/pages/cart_page.dart';
 import 'package:state_management/providers/models/cart.dart';
+import 'package:state_management/widgets/drawer_list.dart';
 import 'package:state_management/widgets/products_grid.dart';
 
 enum FilterOptions { favorites, all }
@@ -44,6 +45,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
         ],
       ),
       body: ProductsGrid(selectFavorites: _selectFavorites),
+      drawer: const DrawerList(),
     );
   }
 
