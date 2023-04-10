@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:state_management/pages/order_page.dart';
+import 'package:state_management/pages/user_products_page.dart';
 
 class DrawerList extends StatelessWidget {
   const DrawerList({super.key});
@@ -7,7 +8,7 @@ class DrawerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: 220,
+      width: 270,
       backgroundColor: Colors.grey.shade300,
       child: Container(
         alignment: Alignment.center,
@@ -20,13 +21,30 @@ class DrawerList extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            drawerTile("Shop", () {
-              Navigator.of(context).pushReplacementNamed("/");
-            }, Icons.shopify),
+            drawerTile(
+              "Shop",
+              () {
+                Navigator.of(context).pushReplacementNamed("/");
+              },
+              Icons.shopify,
+            ),
             const Divider(),
-            drawerTile("Orders", () {
-              Navigator.of(context).pushReplacementNamed(OrderPage.routeName);
-            }, Icons.shopping_bag_rounded)
+            drawerTile(
+              "Orders",
+              () {
+                Navigator.of(context).pushReplacementNamed(OrderPage.routeName);
+              },
+              Icons.shopping_bag_rounded,
+            ),
+            const Divider(),
+            drawerTile(
+              "Manage Products",
+              () {
+                Navigator.of(context)
+                    .pushReplacementNamed(UserProductsPage.routeName);
+              },
+              Icons.settings,
+            )
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:state_management/pages/cart_page.dart';
 import 'package:state_management/pages/order_page.dart';
 import 'package:state_management/pages/product_details_page.dart';
 import 'package:state_management/pages/products_overview_page.dart';
+import 'package:state_management/pages/user_products_page.dart';
 import 'package:state_management/providers/models/cart.dart';
 import 'package:state_management/providers/order_provider.dart';
 import 'package:state_management/providers/products_provider.dart';
@@ -42,6 +43,7 @@ class MainApp extends StatelessWidget {
           ProductDetails.routeName: (context) => const ProductDetails(),
           CartPage.routeName: (context) => const CartPage(),
           OrderPage.routeName: (context) => const OrderPage(),
+          UserProductsPage.routeName: (context) => const UserProductsPage(),
         },
         home: const ProductsOverviewPage(),
       ),
