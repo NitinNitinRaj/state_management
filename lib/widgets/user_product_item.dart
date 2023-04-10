@@ -15,7 +15,7 @@ class UserProductItem extends StatelessWidget {
       trailing: SizedBox(
         width: 100,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
               onPressed: () {},

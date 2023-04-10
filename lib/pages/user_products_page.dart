@@ -14,6 +14,9 @@ class UserProductsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your products"),
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+        ],
       ),
       drawer: const DrawerList(),
       body: Padding(
