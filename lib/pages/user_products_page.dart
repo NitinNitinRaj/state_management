@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:state_management/pages/add_new_product.dart';
 import 'package:state_management/providers/products_provider.dart';
 import 'package:state_management/widgets/drawer_list.dart';
 import 'package:state_management/widgets/user_product_item.dart';
@@ -15,7 +16,11 @@ class UserProductsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Your products"),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(AddNewProduct.routeName);
+              },
+              icon: const Icon(Icons.add)),
         ],
       ),
       drawer: const DrawerList(),
