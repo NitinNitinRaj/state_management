@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:state_management/providers/models/product.dart';
+import 'package:state_management/providers/products_provider.dart';
 
 class AddNewProduct extends StatefulWidget {
   static const routeName = "/add-new-product";
@@ -10,6 +12,7 @@ class AddNewProduct extends StatefulWidget {
 }
 
 class _AddNewProductState extends State<AddNewProduct> {
+  bool _isUrlValid = false;
   final _priceFocusNode = FocusNode();
   final _desciptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
@@ -25,6 +28,7 @@ class _AddNewProductState extends State<AddNewProduct> {
     _priceFocusNode.dispose();
     _desciptionFocusNode.dispose();
     _imageUrlController.dispose();
+    _imageUrlFocusedNode.dispose();
   }
 
   @override
@@ -34,12 +38,27 @@ class _AddNewProductState extends State<AddNewProduct> {
   }
 
   void _updateImageChange() {
-    setState(() {});
+    final value = _imageUrlController.text;
+    if ((value.startsWith("http://") || value.startsWith("https://")) &&
+        (value.endsWith(".jpg") ||
+            value.endsWith(".jpeg") ||
+            value.endsWith("png"))) {
+      setState(() {
+        _isUrlValid = true;
+      });
+    } else {
+      setState(() {
+        _isUrlValid = false;
+      });
+    }
   }
 
   void _saveFormData() {
+    if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
-    print(_editingProduct);
+    Provider.of<ProductsProvider>(context, listen: false)
+        .addProduct(_editingProduct);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -64,6 +83,10 @@ class _AddNewProductState extends State<AddNewProduct> {
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_priceFocusNode);
                     },
+                    validator: (value) {
+                      if (value!.isEmpty) return "Please enter a value";
+                      return null;
+                    },
                     onSaved: (title) {
                       _editingProduct = Product(
                         id: _editingProduct.id,
@@ -82,6 +105,16 @@ class _AddNewProductState extends State<AddNewProduct> {
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(_desciptionFocusNode);
                     },
+                    validator: (value) {
+                      if (value!.isEmpty) return "Please enter a price";
+                      if (double.tryParse(value) == null) {
+                        return "Price must be a number";
+                      }
+                      if (double.parse(value) <= 0) {
+                        return "Price must be a greater number than zero";
+                      }
+                      return null;
+                    },
                     onSaved: (price) {
                       _editingProduct = Product(
                         id: _editingProduct.id,
@@ -98,6 +131,13 @@ class _AddNewProductState extends State<AddNewProduct> {
                     focusNode: _desciptionFocusNode,
                     maxLines: 3,
                     keyboardType: TextInputType.multiline,
+                    validator: (value) {
+                      if (value!.isEmpty) return "Please enter a description";
+                      if (value.length < 10) {
+                        return "Description must be at least 10 characters";
+                      }
+                      return null;
+                    },
                     onSaved: (description) {
                       _editingProduct = Product(
                         id: _editingProduct.id,
@@ -121,18 +161,19 @@ class _AddNewProductState extends State<AddNewProduct> {
                             width: 1,
                           ),
                         ),
-                        child: _imageUrlController.text.isEmpty
-                            ? const Text(
-                                "Enter Image Url",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 11),
-                              )
-                            : FittedBox(
-                                child: Image.network(
-                                  _imageUrlController.text,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                        child:
+                            (_imageUrlController.text.isEmpty || !_isUrlValid)
+                                ? const Text(
+                                    "Enter Image Url",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 11),
+                                  )
+                                : FittedBox(
+                                    child: Image.network(
+                                      _imageUrlController.text,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                       ),
                       Expanded(
                         child: TextFormField(
@@ -142,8 +183,19 @@ class _AddNewProductState extends State<AddNewProduct> {
                           keyboardType: TextInputType.url,
                           controller: _imageUrlController,
                           focusNode: _imageUrlFocusedNode,
-                          onEditingComplete: () {
-                            setState(() {});
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please enter a image URL";
+                            }
+                            if (!value.startsWith("http://") &&
+                                    !value.startsWith("https://") ||
+                                (!value.endsWith(".jpg") &&
+                                    !value.endsWith(".jpeg") &&
+                                    !value.endsWith("png"))) {
+                              return "Please enter a valid image URL";
+                            }
+
+                            return null;
                           },
                           textInputAction: TextInputAction.done,
                           onSaved: (imageUrl) {
