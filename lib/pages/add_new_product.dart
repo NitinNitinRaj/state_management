@@ -13,6 +13,7 @@ class AddNewProduct extends StatefulWidget {
 
 class _AddNewProductState extends State<AddNewProduct> {
   bool _isUrlValid = false;
+  bool _isInitialized = false;
   final _priceFocusNode = FocusNode();
   final _desciptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
@@ -29,6 +30,21 @@ class _AddNewProductState extends State<AddNewProduct> {
     _desciptionFocusNode.dispose();
     _imageUrlController.dispose();
     _imageUrlFocusedNode.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInitialized) {
+      final routeArgument = ModalRoute.of(context)!.settings.arguments;
+      if (routeArgument != null) {
+        String productId = routeArgument as String;
+        _editingProduct =
+            Provider.of<ProductsProvider>(context).findById(productId);
+        _imageUrlController.text = _editingProduct.imageUrl;
+      }
+    }
+    _isInitialized = true;
+    super.didChangeDependencies();
   }
 
   @override
@@ -56,8 +72,14 @@ class _AddNewProductState extends State<AddNewProduct> {
   void _saveFormData() {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
-    Provider.of<ProductsProvider>(context, listen: false)
-        .addProduct(_editingProduct);
+    if (_editingProduct.id == '') {
+      Provider.of<ProductsProvider>(context, listen: false)
+          .addProduct(_editingProduct);
+    } else {
+      Provider.of<ProductsProvider>(context, listen: false)
+          .editProduct(_editingProduct);
+    }
+
     Navigator.of(context).pop();
   }
 
@@ -78,6 +100,7 @@ class _AddNewProductState extends State<AddNewProduct> {
               child: Column(
                 children: [
                   TextFormField(
+                    initialValue: _editingProduct.title,
                     decoration: const InputDecoration(label: Text("Title")),
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {
@@ -89,15 +112,16 @@ class _AddNewProductState extends State<AddNewProduct> {
                     },
                     onSaved: (title) {
                       _editingProduct = Product(
-                        id: _editingProduct.id,
-                        title: title!,
-                        description: _editingProduct.description,
-                        price: _editingProduct.price,
-                        imageUrl: _editingProduct.imageUrl,
-                      );
+                          id: _editingProduct.id,
+                          title: title!,
+                          description: _editingProduct.description,
+                          price: _editingProduct.price,
+                          imageUrl: _editingProduct.imageUrl,
+                          isFavorite: _editingProduct.isFavorite);
                     },
                   ),
                   TextFormField(
+                    initialValue: _editingProduct.price.toString(),
                     decoration: const InputDecoration(label: Text("Price")),
                     keyboardType: TextInputType.number,
                     focusNode: _priceFocusNode,
@@ -117,15 +141,16 @@ class _AddNewProductState extends State<AddNewProduct> {
                     },
                     onSaved: (price) {
                       _editingProduct = Product(
-                        id: _editingProduct.id,
-                        title: _editingProduct.title,
-                        description: _editingProduct.description,
-                        price: double.parse(price!),
-                        imageUrl: _editingProduct.imageUrl,
-                      );
+                          id: _editingProduct.id,
+                          title: _editingProduct.title,
+                          description: _editingProduct.description,
+                          price: double.parse(price!),
+                          imageUrl: _editingProduct.imageUrl,
+                          isFavorite: _editingProduct.isFavorite);
                     },
                   ),
                   TextFormField(
+                    initialValue: _editingProduct.description,
                     decoration:
                         const InputDecoration(label: Text("Description")),
                     focusNode: _desciptionFocusNode,
@@ -140,12 +165,12 @@ class _AddNewProductState extends State<AddNewProduct> {
                     },
                     onSaved: (description) {
                       _editingProduct = Product(
-                        id: _editingProduct.id,
-                        title: _editingProduct.title,
-                        description: description!,
-                        price: _editingProduct.price,
-                        imageUrl: _editingProduct.imageUrl,
-                      );
+                          id: _editingProduct.id,
+                          title: _editingProduct.title,
+                          description: description!,
+                          price: _editingProduct.price,
+                          imageUrl: _editingProduct.imageUrl,
+                          isFavorite: _editingProduct.isFavorite);
                     },
                   ),
                   Row(
@@ -200,12 +225,12 @@ class _AddNewProductState extends State<AddNewProduct> {
                           textInputAction: TextInputAction.done,
                           onSaved: (imageUrl) {
                             _editingProduct = Product(
-                              id: _editingProduct.id,
-                              title: _editingProduct.title,
-                              description: _editingProduct.description,
-                              price: _editingProduct.price,
-                              imageUrl: imageUrl!,
-                            );
+                                id: _editingProduct.id,
+                                title: _editingProduct.title,
+                                description: _editingProduct.description,
+                                price: _editingProduct.price,
+                                imageUrl: imageUrl!,
+                                isFavorite: _editingProduct.isFavorite);
                           },
                         ),
                       )

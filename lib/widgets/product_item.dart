@@ -13,7 +13,6 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(
       context,
-      listen: false,
     ); //set to false beacus don't need to rebuild the whole widget.
     final cartData = Provider.of<Cart>(context, listen: false);
     final themeContext = Theme.of(context);
@@ -22,17 +21,16 @@ class ProductItem extends StatelessWidget {
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: Consumer<Product>(
-            builder: (context, product, _) => IconButton(
-              onPressed: () {
-                product.toggleFavorite();
-              },
-              icon: Icon(
-                product.isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: themeContext.colorScheme.secondary,
-              ),
+          leading: IconButton(
+            onPressed: () {
+              product.toggleFavorite();
+            },
+            icon: Icon(
+              product.isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: themeContext.colorScheme.secondary,
             ),
-          ), //consumer is used here to rebuild only the dynamic part of the widget
+          ),
+          //consumer is used here to rebuild only the dynamic part of the widget
           title: Text(
             product.title,
             textAlign: TextAlign.center,
