@@ -79,7 +79,25 @@ class _AddNewProductState extends State<AddNewProduct> {
     if (_editingProduct.id == '') {
       Provider.of<ProductsProvider>(context, listen: false)
           .addProduct(_editingProduct)
-          .then((_) {
+          .catchError((error) {
+        return showDialog<Null>(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: const Text("An Error has occured!!"),
+              content: const Text(
+                  "Could not add the product. Check you internet connection."),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Okay"))
+              ],
+            );
+          },
+        );
+      }).then((_) {
         setState(() {
           _isLoading = false;
         });

@@ -76,7 +76,7 @@ class ProductsProvider with ChangeNotifier {
       _products.add(finalProduct);
       notifyListeners();
     }).catchError((err) {
-      err.printStackTrace();
+      throw err;
     });
   }
 
