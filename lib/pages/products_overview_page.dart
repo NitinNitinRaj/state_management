@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:state_management/pages/cart_page.dart';
 import 'package:state_management/providers/models/cart.dart';
+import 'package:state_management/providers/products_provider.dart';
 import 'package:state_management/widgets/drawer_list.dart';
 import 'package:state_management/widgets/products_grid.dart';
 
@@ -16,6 +17,16 @@ class ProductsOverviewPage extends StatefulWidget {
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _selectFavorites = false;
+  bool _isInit = false;
+  @override
+  void didChangeDependencies() {
+    if (!_isInit) {
+      Provider.of<ProductsProvider>(context).loadAndSetProduct();
+    }
+    _isInit = true;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeContext = Theme.of(context);
