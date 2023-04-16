@@ -5,7 +5,7 @@ import 'package:state_management/providers/models/product.dart';
 import 'package:http/http.dart' as http;
 
 class ProductsProvider with ChangeNotifier {
-  final List<Product> _products = [
+  List<Product> _products = [
     // Product(
     //   id: 'p1',
     //   title: 'Red Shirt',
@@ -45,7 +45,22 @@ class ProductsProvider with ChangeNotifier {
         "flutterhttprequest-cc84f-default-rtdb.asia-southeast1.firebasedatabase.app",
         "/products.json");
 
-    return http.get(url).then((response) => print(json.decode(response.body)));
+    return http.get(url).then((response) {
+      Map<String, dynamic> loadedProducts = json.decode(response.body);
+      List<Product> listOfLoadedProducts = [];
+      loadedProducts.forEach((productId, product) {
+        listOfLoadedProducts.add(Product(
+          id: productId,
+          title: product["title"],
+          description: product["description"],
+          price: product["price"],
+          imageUrl: product["imageUrl"],
+          isFavorite: product["isFavorite"],
+        ));
+      });
+      _products = listOfLoadedProducts;
+      notifyListeners();
+    });
   }
 
   List<Product> get products {

@@ -18,10 +18,18 @@ class ProductsOverviewPage extends StatefulWidget {
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _selectFavorites = false;
   bool _isInit = false;
+  bool _isLoading = false;
   @override
   void didChangeDependencies() {
     if (!_isInit) {
-      Provider.of<ProductsProvider>(context).loadAndSetProduct();
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ProductsProvider>(context).loadAndSetProduct().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
     _isInit = true;
     super.didChangeDependencies();
@@ -55,7 +63,11 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           buildFilterPopUpMenu(themeContext),
         ],
       ),
-      body: ProductsGrid(selectFavorites: _selectFavorites),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(selectFavorites: _selectFavorites),
       drawer: const DrawerList(),
     );
   }

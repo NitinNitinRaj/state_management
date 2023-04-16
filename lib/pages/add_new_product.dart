@@ -189,8 +189,9 @@ class _AddNewProductState extends State<AddNewProduct> {
                         maxLines: 3,
                         keyboardType: TextInputType.multiline,
                         validator: (value) {
-                          if (value!.isEmpty)
+                          if (value!.isEmpty) {
                             return "Please enter a description";
+                          }
                           if (value.length < 10) {
                             return "Description must be at least 10 characters";
                           }
