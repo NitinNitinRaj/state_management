@@ -41,10 +41,9 @@ class ProductsProvider with ChangeNotifier {
   ];
 
   Future<void> loadAndSetProduct() {
-    final url = Uri.https(
+    final Uri url = Uri.https(
         "flutterhttprequest-cc84f-default-rtdb.asia-southeast1.firebasedatabase.app",
         "/products.json");
-
     return http.get(url).then((response) {
       Map<String, dynamic> loadedProducts = json.decode(response.body);
       List<Product> listOfLoadedProducts = [];
@@ -76,10 +75,9 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) {
-    final url = Uri.https(
+    final Uri url = Uri.https(
         "flutterhttprequest-cc84f-default-rtdb.asia-southeast1.firebasedatabase.app",
         "/products.json");
-
     return http
         .post(url,
             body: json.encode({
@@ -104,9 +102,21 @@ class ProductsProvider with ChangeNotifier {
     });
   }
 
-  void editProduct(Product product) {
+  Future<void> editProduct(Product product) async {
     var index = _products.indexWhere((p) => p.id == product.id);
+
     if (index >= 0) {
+      final Uri url = Uri.https(
+          "flutterhttprequest-cc84f-default-rtdb.asia-southeast1.firebasedatabase.app",
+          "/products/${product.id}.json");
+      await http.patch(url,
+          body: json.encode({
+            "id": product.id,
+            "title": product.title,
+            "description": product.description,
+            "price": product.price,
+            "imageUrl": product.imageUrl
+          }));
       _products[index] = Product(
         id: product.id,
         title: product.title,

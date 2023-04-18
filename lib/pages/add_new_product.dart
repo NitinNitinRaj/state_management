@@ -105,8 +105,13 @@ class _AddNewProductState extends State<AddNewProduct> {
       });
     } else {
       Provider.of<ProductsProvider>(context, listen: false)
-          .editProduct(_editingProduct);
-      Navigator.of(context).pop();
+          .editProduct(_editingProduct)
+          .then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      });
     }
   }
 
